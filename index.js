@@ -27,7 +27,7 @@ function setup({
   logger: loggerParam,
   fileLogger: fileLoggerParam,
   customCodeMap,
-  timeoutAfter = 5000,
+  forceExitAfter = 5000,
 }) {
   const skipCleanup = Symbol('skipCleanup');
 
@@ -54,7 +54,7 @@ function setup({
     skipCleanup,
     callbacksArray,
     codeMap,
-    timeoutAfter,
+    forceExitAfter,
     extraInfoSymbol,
   });
 

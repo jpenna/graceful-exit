@@ -1,5 +1,5 @@
 function methods({
-  logger, fileLogger, skipCleanup, callbacksArray, codeMap, timeoutAfter, extraInfoSymbol,
+  logger, fileLogger, skipCleanup, callbacksArray, codeMap, forceExitAfter, extraInfoSymbol,
 }) {
   return {
     uncaughtException(err) {
@@ -34,7 +34,15 @@ function methods({
     quit(code) { process.emit('cleanup', code || 101); },
 
     cleanup(code) {
-      if (global[skipCleanup]) return fileLogger('CLEANUP WAS CALLED AGAIN!!! There is some error leaking in the cleanup process.');
+      if (global[skipCleanup]) {
+        // if SIGINT for second time
+        if (code === 3) {
+          fileLogger('Force Exit (2x SIGINT)');
+          (logger.info || logger)('Force Exit (2x SIGINT)');
+          process.exit(code);
+        }
+        return fileLogger('CLEANUP WAS CALLED AGAIN!!! There is some error leaking in the cleanup process.');
+      }
       global[skipCleanup] = true;
       callbacksArray.forEach(cb => cb(code, codeMap.get(code)));
 
@@ -43,7 +51,7 @@ function methods({
         process.exit(code);
         fileLogger('Cleanup Timeout');
         (logger.info || logger)('Cleanup Timeout');
-      }, timeoutAfter);
+      }, forceExitAfter);
     },
   };
 }
