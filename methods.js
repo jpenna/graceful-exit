@@ -37,8 +37,8 @@ function methods({
       if (global[skipCleanup]) {
         // if SIGINT for second time
         if (code === 3) {
-          fileLogger('Force Exit (2x SIGINT)');
-          (logger.info || logger)('Force Exit (2x SIGINT)');
+          fileLogger('Force Exit. Cleanup called again (2x SIGINT)');
+          (logger.info || logger)('Force Exit. Cleanup called again (2x SIGINT)');
           process.exit(code);
         }
         return fileLogger('CLEANUP WAS CALLED AGAIN!!! There is some error leaking in the cleanup process.');

@@ -1,30 +1,32 @@
-# Graceful Exit
+# Gracefully Exit
 
 Finish everything up before exiting NodeJS process.
 
 This module has only 2 dependencies, which are used for debugging purposes: `debug` and `simple-node-logger`.
 
+    This module uses `async/await` expressions, which are only supported by NodeJS v7.6+
+
 ## Warnings
 
-1 - We are dealing with errors in general, some errors may prevent `graceful-exit` to work properly (unstable state, for example). On most cases it won't happen.
+1 - We are dealing with errors in general, some errors may prevent `gracefully-exit` to work properly (unstable state, for example). On most cases it won't happen.
 
 2 - **JUST FINISH THINGS AND EXIT THE APPLICATION, DON'T TRY TO RECOVER IT HERE**. Use it just to handle loose edges, such as finish writing to a file or logging something.
 
 ## Installation
 
 ```shell
-$ npm install graceful-exit
+$ npm install gracefully-exit
 ```
 
 ## Usage
 
-`graceful-exit` exposes only 2 methods: `setup` and `gracefulExit`.
+`gracefully-exit` exposes only 2 methods: `setup` and `gracefulExit`.
 
 On the entry point of your code, add the `setup` method.
 
 ```js
 // src/index.js
-import { setup } from 'graceful-exit';
+import { setup } from 'gracefully-exit';
 
 setup({
   logPath, // String [Optional]
@@ -43,7 +45,7 @@ On each module that should be cleaned up before exiting, add the `gracefulExit` 
 
 ```js
 // src/writeFile.js
-import { gracefulExit } from 'graceful-exit';
+import { gracefulExit } from 'gracefully-exit';
 
 // Do your cleanup...
 // You can also return a Promise, the process will only exit when the Promise resolves, rejects or the forceTimeout is triggered
@@ -63,6 +65,10 @@ function onExit() {
 gracefulExit(onExit);
 ```
 
+## Exiting Programmatically
+
+If you want to exit running the cleanup processes, instead of calling `process.exit()`, call `process.emit('quit')`.
+
 ## Setup parameters (ALL parameters ARE OPTIONAL)
 
 ### logPath (String)
@@ -81,7 +87,7 @@ Use this for log some custom message for example.
 
 ```js
 // src/index.js
-import { setup } from 'graceful-exit';
+import { setup } from 'gracefully-exit';
 
 const callbacks = [
   (code, msg) => console.log('My custom message', code),
@@ -96,7 +102,7 @@ Or as a function:
 
 ```js
 // src/index.js
-import { setup } from 'graceful-exit';
+import { setup } from 'gracefully-exit';
 
 const callbacks = (code, msg) => console.log('My custom message', code);
 
@@ -118,7 +124,7 @@ Override the builtin file log function by a custom logger function. If an object
 
 ```js
 // src/index.js
-import { setup } from 'graceful-exit';
+import { setup } from 'gracefully-exit';
 
 import myCustomFileLogger from 'myCustomFileLogger';
 
@@ -131,7 +137,7 @@ Or with options:
 
 ```js
 // src/index.js
-import { setup } from 'graceful-exit';
+import { setup } from 'gracefully-exit';
 
 import myCustomFileLogger from 'myCustomFileLogger';
 
@@ -157,10 +163,10 @@ Milliseconds to wait for the cleanup to finish before forcing exit.
 5 - SIGUSR2  
 ```
 
-Graceful Exit
+Gracefully Exit
 
 ```txt
-100 - Error on Graceful Exit Process  
+100 - Error on Gracefully Exit Process  
 101 - Programmatically quitting
 ```
 
@@ -168,7 +174,7 @@ You can add your own messages or overwrite these by passing a Map in `customCode
 
 ```js
 // src/index.js
-import { setup } from 'graceful-exit';
+import { setup } from 'gracefully-exit';
 
 import myCustomFileLogger from 'myCustomFileLogger';
 

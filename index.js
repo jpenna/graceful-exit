@@ -20,6 +20,8 @@ let cleanupsCount = 0;
 let cleanupsRan = 0;
 let cleanupsFinished = 0;
 
+let alreadySetup = false;
+
 function setup({
   callbacks = () => {},
   logPath,
@@ -29,8 +31,10 @@ function setup({
   customCodeMap,
   forceExitAfter = 5000,
 }) {
-  const skipCleanup = Symbol('skipCleanup');
+  if (alreadySetup) return logger('You are setting Gracefully Exit again. Call setup() only once.');
+  alreadySetup = true;
 
+  const skipCleanup = Symbol('skipCleanup');
   // Add custom code map
   const callbacksArray = Array.isArray(callbacks) ? callbacks : [callbacks];
   if (customCodeMap) customCodeMap.forEach((a, b) => codeMap.set(b, a));
