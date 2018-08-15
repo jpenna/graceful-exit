@@ -1,6 +1,6 @@
 {
   "name": "gracefully-exit",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Finish all pending process before exiting gracefully",
   "main": "index.js",
   "scripts": {
